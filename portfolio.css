@@ -457,6 +457,9 @@ padding-bottom: 100px;
         flex-direction: column;
         width: 100%;
     }
+    .btn{
+        flex-direction: column;
+    }
 
 
 }
