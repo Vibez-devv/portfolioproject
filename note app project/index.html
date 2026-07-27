@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Note App</title>
+</head>
+<style>
+    body {
+        background-color: #0f172a;
+    }
+
+    h3 {
+        color: white;
+        background: linear-gradient(135deg, #00c6ff, #0072ff, #ff4ecd);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 24px;
+    }
+
+    button {
+        border: none;
+        padding: 6px 180px;
+        border-radius: 10px;
+        margin-left: 50px;
+        background: linear-gradient(135deg, #00c6ff, #0072ff);
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.4s ease;
+        box-shadow: 0 5px 15px rgba(0, 198, 255, 0.4);
+    }
+
+
+    button:hover {
+        background: linear-gradient(135deg, #ff4ecd, #7b2ff7);
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px rgba(255, 78, 205, 0.5);
+    }
+
+    input {
+        border: none;
+        border-radius: 10px;
+        padding: 8px 180px;
+        margin-top: 10px;
+        margin-left: 50px;
+
+    }
+
+    textarea {
+        padding: 30px 180px;
+        margin-top: 10px;
+        margin-left: 50px;
+        border-radius: 10px;
+        text-decoration: left;
+        border: none;
+    }
+
+    .note {
+        margin: auto;
+        width: 900px;
+        /* border: 2px solid blue; */
+        /* background-color: blue; */
+        background: linear-gradient(135deg, #141e30, #243b55, #00c6ff);
+        margin-top: 180px;
+        border-radius: 8px;
+    }
+</style>
+
+<body>
+    <div class="note">
+        <h3>My Note App:</h3>
+
+        <input type="text" id="search" placeholder="Search Notes......">
+        <br>
+
+        <input type="text" id="title" placeholder="Title">
+        <br>
+        <textarea id="content" placeholder="text here....."></textarea>
+        <br><br>
+        <button onclick="addNote()">AddNote</button>
+    </div>
+
+
+    <div id="notes"></div>
+</body>
+
+<script type="module">
+    // Import the functions you need from the SDKs you need
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+    // import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+    import {
+        getFirestore,
+        collection,
+        addDoc,
+        getDocs,
+        deleteDoc,
+        doc
+    } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+    // import { getAuth, signInAnonymously, } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+
+    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyBeV-hcfPaghDY-RfjR_0ZspHwnwBUnV2M",
+        authDomain: "vibez-devv.firebaseapp.com",
+        projectId: "vibez-devv",
+        storageBucket: "vibez-devv.firebasestorage.app",
+        messagingSenderId: "727468453012",
+        appId: "1:727468453012:web:a3dcb81d9f935e94df1881"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app)
+    const auth = getAuth();
+
+
+    let userId = null;
+    let notes = [];
+
+    window.addNote = async function () {
+        const title = document.getElementById('title').value
+        const content = document.getElementById('content').value
+
+
+        if (!title) return alert('Title Required');
+
+        const note = {
+            title,
+            content,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            userId
+        };
+
+
+        notes.push(note);
+        saveLocal();
+        renederNotes();
+
+
+        await addDoc(collection(db, "notes"), note)
+    }
+
+    async function loadNotes(params) {
+        const snapshot = await getDocs(collection(db, "notes"))
+        notes = [];
+
+        // snapshot.array.forEach(docSnap => {
+        snapshot.forEach(docSnap => {
+            const data = docSnap.data();
+            if (data.userId === userId) {
+                notes.push({ ...data, id: docSnap.id })
+            }
+        });
+
+        saveLocal();
+        renederNotes();
+    }
+
+    function saveLocal() {
+        localStorage.setItem("notes", JSON.stringify(notes))
+    }
+
+    document.getElementById("search").addEventListener("input", (e) => {
+        renederNotes(e.target.value);
+    });
+
+    function renederNotes(search = "") {
+        const container = document.getElementById('notes',)
+        container.innerHTML = "";
+        //   <button onclick=""></button>
+
+        notes
+            .filter(n =>
+                // n.title.toLowerCaswe().includes(search.toLocaleLowerCase()) ||
+                n.title.toLowerCase().includes(search.toLowerCase()) ||
+                n.content.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+            )
+            .forEach((notes, index) => {
+                // const wordCount = note.content.split("").length;
+                const wordCount = note.content.trim().split(/\s+/).length;
+                const charCount = note.content.length;
+
+                const div = document.createElement('div');
+                div.innerHTML = `
+              <h3>${note.title}</h3>
+              <p>${note.content}</p>
+
+              <small>
+                created: ${note.createdAt}<br>
+                created: ${note.updatedAt}<br>
+                words: ${wordCount}, Characters:${charCount}
+                </small><br>
+
+                 <button onclick="editNote(${index})">Edit</button>
+                  <button onclick="deleteNote(${index})">Delete</button>
+                   <button onclick="exportNote(${index})">Export</button>
+              
+              
+              `;
+
+                container.appendChild(div);
+            });
+    }
+
+    window.editNote = function (index) {
+        const newContent = prompt('Edit note;', notes[index].content);
+        if (newContent !== null) {
+            notes[index].content = newContent;
+            notes[index].updatedAt = new Date().toLocaleDateString();
+
+            saveLocal();
+            renederNotes();
+        }
+    };
+
+
+    window.deleteNote = async function (index) {
+        if (!confirm('delete this note')) return;
+        const note = notes[index];
+
+        if (note.id) {
+            await deleteDoc(doc(db, 'notes', note.id))
+        }
+
+        notes.splice(index, 1);
+        saveLocal();
+        renederNotes();
+    };
+
+    window.exportNote = function (index) {
+        const note = notes[index];
+        const blob = new Blob([note.title + "\n\n" + note.content], { type: "text/plain" })
+
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = note.title + "txt";
+        a.click();
+
+    };
+
+    window.addEventListener("offline", () => {
+        alert("you are offline.changes will merge later.")
+    });
+
+    window.addEventListener('online', () => {
+        alert('Back online. merging...........');
+        loadNotes();
+    })
+
+
+
+
+
+</script>
+
+</html>
