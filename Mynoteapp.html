@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Note App</title>
+  <link rel="shortcut icon" href="./image/note.jpeg" type="image/x-icon">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(180deg,
+        #020617 0%,
+        #020B2E 30%,
+        #021B4D 60%,
+        #03396C 80%,
+        #005B96 100%);
+    color: #fff;
+    min-height: 100vh;
+    padding: 50px 20px;
+  }
+
+  /* Form */
+
+  .paper {
+    width: 650px;
+    margin: 0 auto 50px;
+    padding: 30px;
+    background: rgba(255, 255, 255, .08);
+    backdrop-filter: blur(18px);
+    border: 1px solid rgba(255, 255, 255, .12);
+    border-radius: 18px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, .35);
+  }
+
+  .paper h3 {
+    text-align: center;
+    font-size: 34px;
+    margin-bottom: 25px;
+    color: #38BDF8;
+    font-weight: bold;
+  }
+
+  /* Inputs */
+
+  input,
+  textarea {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 18px;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    background: #F8FAFC;
+    font-size: 16px;
+    transition: .3s;
+  }
+
+  textarea {
+    height: 160px;
+    resize: none;
+  }
+
+  input:focus,
+  textarea:focus {
+    box-shadow: 0 0 0 4px rgba(56, 189, 248, .3);
+  }
+
+  /* Button */
+
+  button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #2563EB, #06B6D4);
+    color: #fff;
+    font-size: 17px;
+    font-weight: bold;
+    transition: .3s;
+  }
+
+  button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(6, 182, 212, .4);
+  }
+
+  /* Notes Grid */
+
+  #notes {
+    width: 1300px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+  }
+
+  /* Note Card */
+
+  #notes>div {
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .12);
+    backdrop-filter: blur(15px);
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .3);
+    transition: .3s;
+  }
+
+  #notes>div:hover {
+    transform: translateY(-5px);
+  }
+
+  #notes h3 {
+    color: #38BDF8;
+    font-size: 24px;
+    margin-bottom: 12px;
+  }
+
+  #notes p {
+    color: #E2E8F0;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    word-break: break-word;
+  }
+
+  #notes small {
+    display: block;
+    color: #94A3B8;
+    margin-bottom: 15px;
+    line-height: 1.5;
+  }
+
+  /* Note Buttons */
+
+  #notes button {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  #notes button:nth-of-type(1) {
+    background: #2563EB;
+  }
+
+  #notes button:nth-of-type(2) {
+    background: #DC2626;
+  }
+
+  #notes button:nth-of-type(3) {
+    background: #059669;
+  }
+
+  /* ===========================
+   Laptop (1024px and below)
+=========================== */
+  @media screen and (max-width: 1024px) {
+
+    .paper {
+      width: 90%;
+    }
+
+    #notes {
+      width: 90%;
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+  }
+
+  /* ===========================
+   Tablet (768px and below)
+=========================== */
+  @media screen and (max-width:768px) {
+
+    body {
+      padding: 40px 15px;
+    }
+
+    .paper {
+      width: 100%;
+      padding: 25px;
+      margin-bottom: 40px;
+    }
+
+    .paper h3 {
+      font-size: 28px;
+    }
+
+    input,
+    textarea {
+      font-size: 15px;
+      padding: 14px;
+    }
+
+    button {
+      font-size: 16px;
+      padding: 13px;
+    }
+
+    #notes {
+      width: 100%;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+  }
+
+  /* ===========================
+   Mobile (576px and below)
+=========================== */
+  @media screen and (max-width:576px) {
+
+    body {
+      padding: 25px 10px;
+    }
+
+    .paper {
+      width: 100%;
+      padding: 20px;
+    }
+
+    .paper h3 {
+      font-size: 24px;
+    }
+
+    input,
+    textarea {
+      padding: 12px;
+      font-size: 14px;
+    }
+
+    textarea {
+      height: 130px;
+    }
+
+    button {
+      padding: 12px;
+      font-size: 15px;
+    }
+
+    #notes {
+      width: 100%;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    #notes h3 {
+      font-size: 20px;
+    }
+
+    #notes p {
+      font-size: 14px;
+    }
+
+    #notes small {
+      font-size: 12px;
+    }
+
+    #notes button {
+      padding: 9px;
+      font-size: 13px;
+    }
+
+  }
+
+  /* ===========================
+   Small Phones (375px and below)
+=========================== */
+  @media screen and (max-width:375px) {
+
+    .paper {
+      padding: 15px;
+    }
+
+    .paper h3 {
+      font-size: 22px;
+    }
+
+    input,
+    textarea,
+    button {
+      font-size: 13px;
+    }
+
+    #notes {
+      gap: 15px;
+    }
+
+  }
+
+  /* @media(max-width:768px) {
+
+    .paper {
+
+      padding: 25px;
+
+    }
+
+    h3 {
+
+      font-size: 28px;
+
+    }
+
+  }
+
+  @media(max-width:480px) {
+
+    body {
+
+      padding: 30px 15px;
+
+    }
+
+    .paper {
+
+      padding: 20px;
+
+    }
+
+    h3 {
+
+      font-size: 24px;
+
+    }
+
+    input,
+    textarea,
+    button {
+
+      font-size: 15px;
+
+    }
+
+  }
+
+
+  @media screen and (max-width: 768px) {
+    .paper {
+      margin-left: 50px;
+      margin-top: 50px;
+    }
+
+    input {
+      padding: 10px 60px;
+      margin-left: 20px;
+    }
+
+    textarea {
+      padding: 20px 68px;
+      margin-left: 20px;
+    }
+
+    button {
+      padding: 10px 70px;
+      margin-left: 20px;
+    }
+
+    h3 {
+      margin-left: 20px;
+
+      font-size: 22px;
+
+      h1 {
+        font-size: 38px;
+        font-weight: bold;
+
+        background: linear-gradient(90deg,
+            #00D4FF,
+            #3B82F6,
+            #8B5CF6);
+        -webkit-text-fill-color: transparent;
+      }
+    }
+  }
+
+  
+  @media screen and (max-width: 576px) {
+    .paper {
+      margin-left: 10px;
+      margin-top: 30px;
+    }
+
+    input {
+      padding: 10px 30px;
+      margin-left: 10px;
+      width: 90%;
+    }
+
+    textarea {
+      padding: 20px 30px;
+      margin-left: 10px;
+      width: 90%;
+    }
+
+    button {
+      padding: 10px 30px;
+      margin-left: 10px;
+      width: 90%;
+    }
+
+    h3 {
+      margin-left: 10px;
+      font-size: 22px;
+    }
+  }
+
+
+  @media screen and (max-width: 375px) {
+    .paper {
+      margin-left: 5px;
+    }
+
+    input,
+    textarea,
+    button {
+      width: 95%;
+      margin-left: 5px;
+    }
+
+  } */
+</style>
+
+<body>
+
+
+  <div class="paper ">
+    <h3>📝 My Notes :</h3>
+    <br>
+    <input type="text" id="search" placeholder="🔍Search Notes............">
+    <br>
+
+    <input type="text" id="title" placeholder="📝Note Title............">
+    <br>
+    <textarea id="content" placeholder="📖Text here.............."></textarea>
+    <br>
+    <button id="addBtn">Add Note</button>
+  </div>
+
+
+  <!-- <div class="ocean"></div> -->
+
+  <div id="notes"></div>
+</body>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+  // import { getfirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+  import {
+    getFirestore,
+    collection,
+    addDoc,
+    getDocs,
+    deleteDoc,
+    doc
+  } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+  // import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+  import {
+    getAuth,
+    signInAnonymously
+  } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyBeV-hcfPaghDY-RfjR_0ZspHwnwBUnV2M",
+    authDomain: "vibez-devv.firebaseapp.com",
+    projectId: "vibez-devv",
+    storageBucket: "vibez-devv.firebasestorage.app",
+    messagingSenderId: "727468453012",
+    appId: "1:727468453012:web:a3dcb81d9f935e94df1881"
+  };
+
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app)
+  const auth = getAuth();
+
+  let userId = null;
+  let notes = [];
+
+
+  signInAnonymously(auth).then(user => {
+    userId = user.user.uid;
+    loadNotes();
+  })
+
+  window.addNote = async function () {
+    const title = document.getElementById('title').value
+    const content = document.getElementById('content').value
+
+    if (!title) return alert('Title required');
+
+    const note = {
+      title,
+      content,
+      createdAt: new Date().toLocaleDateString(),
+      updatedAt: new Date().toLocaleDateString(),
+      userId
+    };
+
+    notes.push(note);
+    saveLocal();
+    renderNotes();
+
+    await addDoc(collection(db, "notes"), note)
+  };
+
+  async function loadNotes() {
+    const snapshot = await getDocs(collection(db, "notes"));
+    notes = [];
+
+
+    snapshot.forEach(docSnap => {
+      const data = docSnap.data();
+      if (data.userId === userId) {
+        notes.push({ ...data, id: docSnap.id })
+      }
+    });
+
+    saveLocal();
+    renderNotes();
+  }
+
+
+  function saveLocal() {
+    localStorage.setItem("notes", JSON.stringify(notes))
+  }
+
+  document.getElementById('search'), addEventListener("input", (e) => {
+    renderNotes(e.target.value);
+  });
+
+  document.getElementById("addBtn").addEventListener("click", addNote)
+
+  function renderNotes(search = "") {
+    const container = document.getElementById('notes');
+    container.innerHTML = "";
+
+    notes
+      .filter(n =>
+        n.title.toLowerCase().includes(search.toLocaleLowerCase()) ||
+        n.content.toLowerCase().includes(search.toLowerCase())
+      )
+
+      .forEach((note, index) => {
+        const wordCount = note.content.split(" ").length;
+        const charCount = note.content.length;
+
+        const div = document.createElement("div")
+
+        div.innerHTML = `
+        <h3>${note.title}</h3>
+        <p>${note.content}</p>
+
+        <small>
+          created: ${note.createdAt}<br>
+          updated: ${note.updatedAt}<br>
+          words: ${wordCount}, charaters: ${charCount}
+          </small><br>
+        
+          <button onclick="editNote(${index})">Edit</button>
+          <button onclick="deleteNote(${index})">Delete</button>
+          <button onclick="exportNote(${index})">Export</button>
+          
+        
+        `;
+
+        container.appendChild(div)
+      });
+
+  }
+
+
+  window.editNote = function (index) {
+    const newContent = prompt("Edit note;", notes[index].content);
+
+    if (newContent !== null) {
+      notes[index].content = newContent;
+      notes[index].updatedAt = new Date().toLocaleDateString();
+
+
+      saveLocal();
+      renderNotes();
+    }
+  };
+
+  // window.deleteNote = async function(index){
+  //   if (!confirm("Delete this note")) return
+  // }
+
+
+  window.deleteNote = async function (index) {
+    if (!confirm("Delete this note?")) return;
+
+    const note = notes[index];
+
+    if (note.id) {
+      await deleteDoc(doc(db, "notes", note.id));
+    }
+
+    notes.splice(index, 1);
+    saveLocal();
+    renderNotes();
+
+
+
+
+
+
+    // window.exportNote = function(index){
+    //   const note = notes[index];
+
+
+
+
+    // }
+
+  }
+
+
+  window.exportNote = function (index) {
+    const note = notes[index];
+
+    const blob = new Blob(
+      [note.title + "\n\n" + note.content],
+      { type: "text/plain" }
+    );
+
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = note.title + ".txt";
+    a.click();
+  };
+
+
+  // window.addEventListener("offline", () => {
+  //   alert("You are offline");
+  // });
+
+  // window.addEventListener("online", () => {
+  //   alert("Back online, syncing...");
+  //   loadNotes();
+  // })
+  window.addEventListener("offline", () => {
+    document.body.insertAdjacentHTML("afterbegin",
+      alert('You are offline.changes will sync later')
+      // <div id="offlineMsg" style="background:red;color:white;padding:10px;text-align:center;">You are offline</div>?
+    );
+  });
+
+  window.addEventListener("online", () => {
+    const msg = document.getElementById("offlineMsg");
+    if (msg) msg.remove();
+
+    console.log("Back online");
+    alert('Back online.syncing')
+    loadNotes();
+  });
+
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+</html>
